@@ -8,13 +8,13 @@ import useAuth from "../hooks/useAuth";
 import { useTheme } from "@emotion/react";
 import Autocomplete from '@mui/material/Autocomplete';
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 
 export function NewTest() {
+  const navigate = useNavigate();
 
   const { token } : any = useAuth()
-
-  const theme = useTheme()
 
   const [optionList, setOptionList] = useState<any>({
     discipline: [],
@@ -40,7 +40,7 @@ export function NewTest() {
       pdfUrl: createTestForm.pdf,
       categoryId: optionList.category.find((category: any) => category.name === createTestForm.category).id,
       teacherDisciplineId: optionList.teacher.find((teacher: any) =>
-        teacher.name === createTestForm.teacher).teachersDisciplines.find((teacherDiscipline: any) =>
+        teacher.name === createTestForm.teacher).teacherDisciplines.find((teacherDiscipline: any) =>
           teacherDiscipline.disciplineId === optionList.discipline.find((discipline: any) =>
             discipline.name === createTestForm.discipline).id).id
 
@@ -73,10 +73,11 @@ export function NewTest() {
     const categories = await api.getCategories(token)
 
     setOptionList({
-      discipline: disciplines,
-      teacher: teachers,
-      category: categories,
+      discipline: disciplines.data,
+      teacher: teachers.data,
+      category: categories.data.categories,
     })
+
   }
 
   useEffect(() => {
@@ -108,137 +109,169 @@ export function NewTest() {
   }
 
   return (
-
-    <Box
-      sx={{
-        marginTop: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
+    <>
       <Box
-
-        component="form"
-        onSubmit={handleSubmit}
         sx={{
-          marginTop: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 2,
-          width: "80vw"
+          marginX: "auto",
+          width: "700px",
         }}
       >
-        <TextField
-          fullWidth={true}
-          variant="filled"
-          type="string"
-          required
-          id="title"
-          label="Título da prova"
-          name="title"
-          InputLabelProps={{
-            color: "secondary"
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
           }}
-          value={createTestForm.title}
-          onChange={handleFreeFormInput}
-        />
-        <TextField
-          fullWidth={true}
-          variant="filled"
-          required
-          type="url"
-          id="pdf"
-          label="PDF da Prova"
-          name="pdf"
-          InputLabelProps={{
-            color: "secondary"
-          }}
-          value={createTestForm.pdf}
-          onChange={handleFreeFormInput}
-        />
-        <Autocomplete
-          fullWidth={true}
-          id="category-input"
-          options={optionList.category.map((option: any) => option.name)}
-          autoComplete={true}
-          onInputChange={(e, value) => handleFormInput("category", value)}
-          renderInput={(params) =>
-            <TextField
-              {...params}
-              label="Categoria"
-              variant="filled"
-              InputLabelProps={{
-                color: "secondary"
-              }}
-              required
-              size="small"
-            />}
-        />
-        <Autocomplete
-          fullWidth={true}
-          id="discipline-input"
-          options={optionList.discipline.map((option: any) => option.name)}
-          autoComplete={true}
-          onInputChange={(e, value) => handleFormInput("discipline", value)}
-          renderInput={(params) =>
-            <TextField
-              {...params}
-              label="Disciplina"
-              variant="filled"
-              InputLabelProps={{
-                color: "secondary"
-              }}
-              required
-              size="small"
-            />}
-        />
-        <Autocomplete
-          fullWidth={true}
-          id="teacher-input"
-          options={createTestForm.discipline
-            ? optionList.teacher.filter((el: any) =>
-              el.teachersDisciplines.map((el: any) =>
-                el.disciplineId).includes(optionList.discipline.find((el: any) =>
-                  el.name === createTestForm.discipline).id)).map((el: any) =>
-                    el.name)
-            : ["Escolha uma disciplina primeiro"]
-          }
-          autoComplete={true}
-          disabled={disableForm(createTestForm.discipline)}
-          onInputChange={(e, value) => handleFormInput("teacher", value)}
-          value={createTestForm.teacher}
-          renderInput={(params) =>
-            <TextField
-              {...params}
-              label="Pessoa Instrutora"
-              variant="filled"
-              InputLabelProps={{
-                color: "secondary"
-              }}
-              required
-              size="small"
-            />}
-        />
-        <Button sx={{ mb: 5 }}
-          color="secondary"
-          type="submit"
-          fullWidth
-          variant="contained"
         >
-          <Typography
-            component="h1"
-            variant="button"
+          <Button
+            variant="contained"
+            onClick={() => navigate("/app/disciplinas")}
           >
-            {loading
-              ? "Carregando"
-              : "Adicionar"
-            }
-          </Typography>
-        </Button>
+            Disciplinas
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => navigate("/app/pessoas-instrutoras")}
+          >
+            Pessoa Instrutora
+          </Button>
+          <Button variant="outlined" onClick={() => navigate("/app/adicionar")}>
+            Adicionar
+          </Button>
+        </Box>
+        <Box
+          sx={{
+            marginTop: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+              marginTop: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              width: "80vw"
+            }}
+          >
+            <TextField
+              fullWidth={true}
+              variant="filled"
+              type="string"
+              required
+              id="title"
+              label="Título da prova"
+              name="title"
+              InputLabelProps={{
+                color: "secondary"
+              }}
+              value={createTestForm.title}
+              onChange={handleFreeFormInput}
+            />
+            <TextField
+              fullWidth={true}
+              variant="filled"
+              required
+              type="url"
+              id="pdf"
+              label="PDF da Prova"
+              name="pdf"
+              InputLabelProps={{
+                color: "secondary"
+              }}
+              value={createTestForm.pdf}
+              onChange={handleFreeFormInput}
+            />
+            <Autocomplete
+              fullWidth={true}
+              id="category-input"
+              options={optionList.category.map((option: any) => option.name)}
+              autoComplete={true}
+              onInputChange={(e, value) => handleFormInput("category", value)}
+              renderInput={(params) =>
+                <TextField
+                  {...params}
+                  label="Categoria"
+                  variant="filled"
+                  InputLabelProps={{
+                    color: "secondary"
+                  }}
+                  required
+                  size="small"
+                />}
+            />
+            <Autocomplete
+              fullWidth={true}
+              id="discipline-input"
+              options={optionList.discipline.map((option: any) => option.name)}
+              autoComplete={true}
+              onInputChange={(e, value) => handleFormInput("discipline", value)}
+              renderInput={(params) =>
+                <TextField
+                  {...params}
+                  label="Disciplina"
+                  variant="filled"
+                  InputLabelProps={{
+                    color: "secondary"
+                  }}
+                  required
+                  size="small"
+                />}
+            />
+            <Autocomplete
+              fullWidth={true}
+              id="teacher-input"
+              options={createTestForm.discipline
+                ? optionList.teacher.filter((el: any) =>
+                  el.teacherDisciplines.map((el: any) =>
+                    el.disciplineId).includes(optionList.discipline.find((el: any) =>
+                      el.name === createTestForm.discipline).id)).map((el: any) =>
+                        el.name)
+                : ["Escolha uma disciplina primeiro"]
+              }
+              autoComplete={true}
+              disabled={disableForm(createTestForm.discipline)}
+              onInputChange={(e, value) => handleFormInput("teacher", value)}
+              renderInput={(params) =>
+                <TextField
+                  {...params}
+                  label="Pessoa Instrutora"
+                  variant="filled"
+                  InputLabelProps={{
+                    color: "secondary"
+                  }}
+                  required
+                  size="small"
+                />}
+            />
+            <Button sx={{ mb: 5 }}
+              color="secondary"
+              type="submit"
+              fullWidth
+              variant="contained"
+            >
+              <Typography
+                component="h1"
+                variant="button"
+              >
+                {loading
+                  ? "Carregando"
+                  : "Adicionar"
+                }
+              </Typography>
+            </Button>
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </>
+
 
   )
 }

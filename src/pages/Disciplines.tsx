@@ -231,7 +231,7 @@ function Tests({
         testsWithDisciplines.tests
         .filter((test) => testOfCategory(test, categoryId))
         .map((test) => (
-          <Test test={test} teacherName={testsWithDisciplines.teacherName}/>
+          <TestComponent test={test} teacherName={testsWithDisciplines.teacherName}/>
           ))
       )}
     </>
@@ -243,8 +243,8 @@ interface TestProp {
   teacherName: any;
 }
 
-function Test({test, teacherName} : TestProp) {
-  function handleView(e: any) {
+function TestComponent({test, teacherName} : TestProp) {
+  function HandleView(e: any) {
     e.preventDefault()
     const { token } : any = useAuth();
     api.addView(token, test.id)
@@ -257,7 +257,7 @@ function Test({test, teacherName} : TestProp) {
         target="_blank"
         underline="none"
         color="inherit"
-        onClick={handleView}
+        onClick={HandleView}
         >{`${test.name} (${teacherName}) views(${test.viewCount})`}</Link>
     </Typography>
   )

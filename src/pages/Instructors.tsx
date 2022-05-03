@@ -208,7 +208,7 @@ function Tests({ tests, disciplineName }: TestsProps) {
   return (
     <>
       {tests.map((test) => (
-        <Test test={test} disciplineName={disciplineName}/>
+        <TestComponent test={test} disciplineName={disciplineName}/>
       ))}
     </>
   );
@@ -219,8 +219,8 @@ interface TestProp {
   disciplineName: any;
 }
 
-function Test({test, disciplineName} : TestProp) {
-  function handleView(e: any) {
+function TestComponent({test, disciplineName} : TestProp) {
+  function HandleView(e: any) {
     e.preventDefault()
     const { token } : any = useAuth();
     api.addView(token, test.id)
@@ -233,7 +233,7 @@ function Test({test, disciplineName} : TestProp) {
         target="_blank"
         underline="none"
         color="inherit"
-        onClick={handleView}
+        onClick={HandleView}
         >{`${test.name} (${disciplineName})`}</Link>
     </Typography>
   )

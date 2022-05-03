@@ -8,6 +8,7 @@ import { AlertProvider } from "./contexts/AlertContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import Disciplines from "./pages/Disciplines";
 import Instructors from "./pages/Instructors";
+import { NewTest } from "./pages/NewTest";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
@@ -34,6 +35,7 @@ function App() {
                   path="/app/pessoas-instrutoras"
                   element={<Instructors />}
                 />
+                <Route path="/app/adicionar" element={<NewTest />}/>
               </Route>
             </Routes>
           </BrowserRouter>
