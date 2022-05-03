@@ -107,9 +107,9 @@ async function createTest(token: string, data: any) {
   await baseAPI.post<any>("/test", data, config)
 }
 
-async function addView(token: string) {
+async function addView(token: string, id: number) {
   const config = getConfig(token)
-  await baseAPI.patch<any>("/test/:id", {}, config)
+  await baseAPI.patch<any>(`/test/${id}`, {}, config)
 }
 
 const api = {

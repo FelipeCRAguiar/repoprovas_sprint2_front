@@ -12,7 +12,7 @@ import api from "../services/api";
 
 export function NewTest() {
 
-  const { auth } : any = useAuth()
+  const { token } : any = useAuth()
 
   const theme = useTheme()
 
@@ -49,7 +49,7 @@ export function NewTest() {
     try {
       setLoading(true)
 
-      await api.createTest(auth, data)
+      await api.createTest(token, data)
       alert("Teste criado com sucesso")
       setCreateTestForm({
         title: "",
@@ -68,9 +68,9 @@ export function NewTest() {
   }
 
   async function getData() {
-    const disciplines = await api.getDisciplines(auth)
-    const teachers = await api.getTeachers(auth)
-    const categories = await api.getCategories(auth)
+    const disciplines = await api.getDisciplines(token)
+    const teachers = await api.getTeachers(token)
+    const categories = await api.getCategories(token)
 
     setOptionList({
       discipline: disciplines,
