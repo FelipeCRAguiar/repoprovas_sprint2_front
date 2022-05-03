@@ -208,17 +208,36 @@ function Tests({ tests, disciplineName }: TestsProps) {
   return (
     <>
       {tests.map((test) => (
-        <Typography key={test.id} color="#878787">
-          <Link
-            href={test.pdfUrl}
-            target="_blank"
-            underline="none"
-            color="inherit"
-          >{`${test.name} (${disciplineName})`}</Link>
-        </Typography>
+        <Test test={test} disciplineName={disciplineName}/>
       ))}
     </>
   );
+}
+
+interface TestProp {
+  test: any;
+  disciplineName: any;
+}
+
+function Test({test, disciplineName} : TestProp) {
+  function handleView(e: any) {
+    e.preventDefault()
+    const { token } : any = useAuth();
+    api.addView(token, test.id)
+  }
+
+  return (
+    <Typography key={test.id} color="#878787">
+      <Link
+        href={test.pdfUrl}
+        target="_blank"
+        underline="none"
+        color="inherit"
+        onClick={handleView}
+        >{`${test.name} (${disciplineName})`}</Link>
+    </Typography>
+  )
+  
 }
 
 export default Instructors;

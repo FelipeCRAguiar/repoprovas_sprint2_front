@@ -92,12 +92,36 @@ async function getCategories(token: string) {
   return baseAPI.get<{ categories: Category[] }>("/categories", config);
 }
 
+async function getTeachers(token : string) {
+  const config = getConfig(token)
+  return baseAPI.get<any>("/teacher", config)
+}
+
+async function getDisciplines(token: string) {
+  const config = getConfig(token)
+  return baseAPI.get<any>("/discipline", config)
+}
+
+async function createTest(token: string, data: any) {
+  const config = getConfig(token)
+  await baseAPI.post<any>("/test", data, config)
+}
+
+async function addView(token: string) {
+  const config = getConfig(token)
+  await baseAPI.patch<any>("/test/:id", {}, config)
+}
+
 const api = {
   signUp,
   signIn,
   getTestsByDiscipline,
   getTestsByTeacher,
   getCategories,
+  getDisciplines,
+  getTeachers,
+  createTest,
+  addView
 };
 
 export default api;

@@ -219,28 +219,49 @@ interface TestsProps {
   categoryId: number;
 }
 
+
 function Tests({
   categoryId,
   testsWithTeachers: testsWithDisciplines,
 }: TestsProps) {
+  
   return (
     <>
       {testsWithDisciplines.map((testsWithDisciplines) =>
         testsWithDisciplines.tests
-          .filter((test) => testOfCategory(test, categoryId))
-          .map((test) => (
-            <Typography key={test.id} color="#878787">
-              <Link
-                href={test.pdfUrl}
-                target="_blank"
-                underline="none"
-                color="inherit"
-              >{`${test.name} (${testsWithDisciplines.teacherName})`}</Link>
-            </Typography>
+        .filter((test) => testOfCategory(test, categoryId))
+        .map((test) => (
+          <Test test={test} teacherName={testsWithDisciplines.teacherName}/>
           ))
       )}
     </>
   );
+}
+
+interface TestProp {
+  test: any;
+  teacherName: any;
+}
+
+function Test({test, teacherName} : TestProp) {
+  function handleView(e: any) {
+    e.preventDefault()
+    const { token } : any = useAuth();
+    api.addView(token, test.id)
+  }
+
+  return (
+    <Typography key={test.id} color="#878787">
+      <Link
+        href={test.pdfUrl}
+        target="_blank"
+        underline="none"
+        color="inherit"
+        onClick={handleView}
+        >{`${test.name} (${teacherName}) views(${test.viewCount})`}</Link>
+    </Typography>
+  )
+  
 }
 
 export default Disciplines;
